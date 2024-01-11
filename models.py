@@ -23,19 +23,23 @@ class User(db.Model):
     # WHERE deleted_at IS NULL
 
 class LocationModel(db.Model):
+    __tablename__ = "locations"
+
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
     updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
 
-# class PropertyModel(db.Model):
-#     __tablename__ = 'properties'
+class PropertyModel(db.Model):
+    __tablename__ = 'properties'
 
-#     id = db.Column(db.Integer, primary_key = True)
-#     name = db.Column(db.Text, nullable=False)
-#     description = db.Column(db.String, nullable=False)
-#     listing_price = db.Column(db.Interger, nullable=False)
-#     location = db.C
-#     created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
-#     updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.Text, nullable=False)
+    description = db.Column(db.String, nullable=False)
+    listing_price = db.Column(db.Integer, nullable=False)
+    location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=False)
+    type_of_property = db.Column(db.Text, nullable=False)
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
+    updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
 
