@@ -3,9 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 # initialize db
 db = SQLAlchemy()
 
-
 # models
-class User(db.Model):
+class UserModel(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key = True)
@@ -29,6 +28,10 @@ class LocationModel(db.Model):
     name = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
     updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
+
+    def json(self):
+        return {'id': self.id, 'name': self.name, 'created_at': self.created_at,
+                'updated_at': self.updated_at}
 
 class PropertyModel(db.Model):
     __tablename__ = 'properties'
