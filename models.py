@@ -29,9 +29,6 @@ class LocationModel(db.Model):
     created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
     updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
 
-    def json(self):
-        return {'id': self.id, 'name': self.name, 'created_at': self.created_at,
-                'updated_at': self.updated_at}
 
 class PropertyModel(db.Model):
     __tablename__ = 'properties'
