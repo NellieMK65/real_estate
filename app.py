@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_migrate import Migrate
-from flask_restful import Api
+from flask_restful import Api, Resource
 from models import db
-from resources import Location, AppResource
+from resources.location import Location
 
 app = Flask(__name__)
 # configure db URI
@@ -17,7 +17,9 @@ db.init_app(app)
 # initialize flask restful
 api = Api(app)
 
-api.add_resource(AppResource, '/')
+class AppResource(Resource):
+    def get(self):
+        return "Welcome to the real estate api"
 
-api.add_resource(Location, '/location/<int:id>')
+api.add_resource(Location, '/location', '/location/<int:id>')
 
