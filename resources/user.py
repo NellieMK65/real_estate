@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse, fields, marshal_with
-from flask_bcrypt import check_password_hash,generate_password_hash
+from flask_bcrypt import generate_password_hash
+from flask_jwt_extended import create_access_token, create_refresh_token
 from models import UserModel, db
 
 user_fields = {
@@ -58,6 +59,33 @@ class Signup(Resource):
             # get user from db after saving
             db.session.refresh(user)
 
-            return {"message": "Account created successfully", "status": "success", "user": user }
+            return {"message": "Account created successfully", "status": "success", "user": user }, 201
         except:
-            return {"message": "Unable to create account", "status": "fail"}
+            return {"message": "Unable to create account", "status": "fail"}, 400
+
+class Login(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument('email', required=True, help="Email address is required")
+    parser.add_argument('password', required=True, help="Password is required")
+
+    def post(self):
+        data = Login.parser.parse_args()
+
+        # 1. Get user using email
+        user = UserModel.query.filter_by(email = data['email']).first()
+
+        if user:
+            # 2. check if provided password is correct
+            is_password_correct = user.check_password(data['password'])
+
+            if is_password_correct:
+                # 3. Generate token and return user dict
+                user_json = user.to_json()
+                access_token = create_access_token(identity=user_json['id'])
+                refresh_token = create_refresh_token(identity=user_json['id'])
+                return {"message": "Login successful", "status": "success",
+                        "access_token": access_token, "refresh_token": refresh_token}, 200
+            else:
+                return {"message": "Invalid email/password", "status": "fail"}, 403
+        else:
+            return {"message": "Invalid email/password", "status": "fail"}, 403

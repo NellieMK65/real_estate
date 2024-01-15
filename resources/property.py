@@ -1,4 +1,5 @@
 from flask_restful import Resource, fields, marshal_with, reqparse
+from flask_jwt_extended import jwt_required
 from models import PropertyModel, db
 
 resource_fields = {
@@ -32,6 +33,7 @@ class Property(Resource):
 
             return properties
 
+    @jwt_required()
     def post(self):
         data = Property.parser.parse_args()
 

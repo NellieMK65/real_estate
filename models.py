@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import check_password_hash
 
 # initialize db
 db = SQLAlchemy()
@@ -18,6 +19,12 @@ class UserModel(db.Model):
     updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
     # isDeleted = db.Column(db.Boolean, server_default=False)
     # deleted_at = db.Column(db.TIMESTAMP)
+
+    def check_password(self, plain_password):
+        return check_password_hash(self.password, plain_password)
+
+    def to_json(self):
+        return {"id": self.id, "role": self.role}
 
     # WHERE deleted_at IS NULL
 
