@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 from flask_restful import Api, Resource
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
-from models import db
+from models import db, UserModel
 from resources.location import Location
 from resources.property import Property
 from resources.user import Signup, Login
@@ -30,6 +30,15 @@ api = Api(app)
 bcrypt = Bcrypt(app)
 # initialize JWT
 jwt = JWTManager(app)
+
+# Register a callback function that loads a user from your database whenever
+# a protected route is accessed. This should return any python object on a
+# successful lookup, or None if the lookup failed for any reason (for example
+# if the user has been deleted from the database).
+@jwt.user_lookup_loader
+def user_lookup_callback(_jwt_header, jwt_data):
+    identity = jwt_data["sub"]
+    return UserModel.query.filter_by(id=identity).one_or_none().to_json()
 
 class AppResource(Resource):
     def get(self):

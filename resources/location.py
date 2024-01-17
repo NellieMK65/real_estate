@@ -1,4 +1,5 @@
 from flask_restful import Resource, fields, marshal_with, reqparse
+from flask_jwt_extended import jwt_required, current_user
 from models import LocationModel, db
 
 resource_fields = {
@@ -26,7 +27,12 @@ class Location(Resource):
 
             return locations
 
+
+    @jwt_required
     def post(self):
+        if current_user['role'] != 'admin':
+            return {"message": "Unauthorized request", "status": "fail"}, 403
+
         data = Location.parser.parse_args()
         # unpacks a dict add passes it as key-value pairs
         # {"title": "Ngong"} -> title: "Ngong"

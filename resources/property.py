@@ -1,5 +1,5 @@
 from flask_restful import Resource, fields, marshal_with, reqparse
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, current_user
 from models import PropertyModel, db
 from .location import resource_fields as location_fields
 
@@ -37,6 +37,10 @@ class Property(Resource):
 
     @jwt_required()
     def post(self):
+        # check if user is admin
+        if current_user['role'] != 'admin':
+            return {"message": "Unauthorized request", "status": "fail"}, 403
+
         data = Property.parser.parse_args()
 
         property = PropertyModel(**data)

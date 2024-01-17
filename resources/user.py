@@ -20,7 +20,6 @@ response_field = {
     "user": fields.Nested(user_fields)
 }
 
-
 class Signup(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('first_name', required=True, help="Firstname is required")
