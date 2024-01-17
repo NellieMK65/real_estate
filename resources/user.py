@@ -17,10 +17,9 @@ user_fields = {
 response_field = {
     "message": fields.String,
     "status": fields.String,
+    "user": fields.Nested(user_fields)
 }
 
-response_field['user'] = {}
-response_field['user']['id'] = fields.Integer
 
 class Signup(Resource):
     parser = reqparse.RequestParser()
@@ -59,7 +58,15 @@ class Signup(Resource):
             # get user from db after saving
             db.session.refresh(user)
 
-            return {"message": "Account created successfully", "status": "success", "user": user }, 201
+            user_json = user.to_json()
+            access_token = create_access_token(identity=user_json['id'])
+            refresh_token = create_refresh_token(identity=user_json['id'])
+
+            return {"message": "Account created successfully",
+                    "status": "success",
+                    "access_token": access_token,
+                    "refresh_token": refresh_token,
+                    "user": user_json }, 201
         except:
             return {"message": "Unable to create account", "status": "fail"}, 400
 
@@ -83,8 +90,12 @@ class Login(Resource):
                 user_json = user.to_json()
                 access_token = create_access_token(identity=user_json['id'])
                 refresh_token = create_refresh_token(identity=user_json['id'])
-                return {"message": "Login successful", "status": "success",
-                        "access_token": access_token, "refresh_token": refresh_token}, 200
+                return {"message": "Login successful",
+                        "status": "success",
+                        "access_token": access_token,
+                        "refresh_token": refresh_token,
+                        "user": user_json,
+                        }, 200
             else:
                 return {"message": "Invalid email/password", "status": "fail"}, 403
         else:

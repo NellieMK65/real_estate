@@ -1,6 +1,7 @@
 from flask_restful import Resource, fields, marshal_with, reqparse
 from flask_jwt_extended import jwt_required
 from models import PropertyModel, db
+from .location import resource_fields as location_fields
 
 resource_fields = {
     'id': fields.Integer,
@@ -8,6 +9,7 @@ resource_fields = {
     'description': fields.String,
     'listing_price': fields.Integer,
     'type_of_property': fields.String,
+    'location': fields.Nested(location_fields),
     'is_active': fields.Boolean,
     'created_at': fields.DateTime,
     'updated_at': fields.DateTime
