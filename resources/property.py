@@ -24,6 +24,7 @@ class Property(Resource):
     parser.add_argument('location_id', required=True, help="Location is required")
     parser.add_argument('type_of_property', required=True, help="Type of property is required")
 
+
     @marshal_with(resource_fields)
     def get(self, id=None):
         if id:

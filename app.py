@@ -3,6 +3,7 @@ from flask_migrate import Migrate
 from flask_restful import Api, Resource
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 from models import db, UserModel
 from resources.location import Location
 from resources.property import Property
@@ -16,6 +17,7 @@ app.config['SQLALCHEMY_ECHO'] = True
 # Setup the Flask-JWT-Extended extension
 app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
 
+CORS(app)
 
 # link migrations
 migrations = Migrate(app, db)
