@@ -7,7 +7,7 @@ from flask_cors import CORS
 from models import db, UserModel
 from resources.location import Location
 from resources.property import Property
-from resources.user import Signup, Login
+from resources.user import Signup, Login, RefreshAccess
 
 app = Flask(__name__)
 # configure db URI
@@ -50,3 +50,4 @@ api.add_resource(Location, '/location', '/location/<int:id>')
 api.add_resource(Property, '/property', '/property/<int:id>')
 api.add_resource(Signup, '/signup')
 api.add_resource(Login, '/login')
+api.add_resource(RefreshAccess, '/refresh-access')

@@ -1,6 +1,7 @@
+from flask import jsonify
 from flask_restful import Resource, reqparse, fields, marshal_with
 from flask_bcrypt import generate_password_hash
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 from models import UserModel, db
 
 user_fields = {
@@ -99,3 +100,13 @@ class Login(Resource):
                 return {"message": "Invalid email/password", "status": "fail"}, 403
         else:
             return {"message": "Invalid email/password", "status": "fail"}, 403
+
+class RefreshAccess(Resource):
+    @jwt_required(refresh=True)
+    def post(self):
+        identity = get_jwt_identity()
+
+        access_token = create_access_token(identity=identity)
+
+        return jsonify(access_token = access_token)
+
