@@ -26,6 +26,7 @@ class Property(Resource):
 
 
     @marshal_with(resource_fields)
+    @jwt_required()
     def get(self, id=None):
         if id:
             property = PropertyModel.query.filter_by(id=id).first()

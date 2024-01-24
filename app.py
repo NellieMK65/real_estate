@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from flask import Flask
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
@@ -16,6 +18,7 @@ app.config['BUNDLE_ERRORS'] = True
 app.config['SQLALCHEMY_ECHO'] = True
 # Setup the Flask-JWT-Extended extension
 app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=1)
 
 CORS(app)
 
