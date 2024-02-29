@@ -1,3 +1,5 @@
+
+import os
 from datetime import timedelta
 
 from flask import Flask
@@ -13,11 +15,11 @@ from resources.user import Signup, Login, RefreshAccess
 
 app = Flask(__name__)
 # configure db URI
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['BUNDLE_ERRORS'] = True
 app.config['SQLALCHEMY_ECHO'] = True
 # Setup the Flask-JWT-Extended extension
-app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
+app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY")  # Change this!
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=1)
 
 CORS(app)
