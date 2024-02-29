@@ -26,7 +26,7 @@ class Property(Resource):
 
 
     @marshal_with(resource_fields)
-    @jwt_required()
+    # @jwt_required()
     def get(self, id=None):
         if id:
             property = PropertyModel.query.filter_by(id=id).first()
@@ -37,11 +37,11 @@ class Property(Resource):
 
             return properties
 
-    @jwt_required()
+    # @jwt_required()
     def post(self):
         # check if user is admin
-        if current_user['role'] != 'admin':
-            return {"message": "Unauthorized request", "status": "fail"}, 403
+        # if current_user['role'] != 'admin':
+        #     return {"message": "Unauthorized request", "status": "fail"}, 403
 
         data = Property.parser.parse_args()
 

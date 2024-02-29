@@ -28,10 +28,10 @@ class Location(Resource):
             return locations
 
 
-    @jwt_required
+    # @jwt_required
     def post(self):
-        if current_user['role'] != 'admin':
-            return {"message": "Unauthorized request", "status": "fail"}, 403
+        # if current_user['role'] != 'admin':
+        #     return {"message": "Unauthorized request", "status": "fail"}, 403
 
         data = Location.parser.parse_args()
         # unpacks a dict add passes it as key-value pairs
